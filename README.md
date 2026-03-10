@@ -1,70 +1,172 @@
-# Getting Started with Create React App
+# NFT Marketplace — ERC721 on Base Sepolia
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full-stack NFT marketplace built with React, ethers.js, and a custom ERC721 Solidity smart contract deployed on Base Sepolia testnet. Users can mint, list, buy, and cancel NFT listings — with an admin panel for the contract owner to collect marketplace fees.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## Live Demo
 
-### `npm start`
+> Deployed on Vercel — link added after deployment
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Features
 
-### `npm test`
+| Feature | Description |
+|---|---|
+| **Connect Wallet** | MetaMask integration with Base Sepolia network detection |
+| **Mint NFT** | Upload image to IPFS via Pinata, generate metadata, mint ERC721 token on-chain |
+| **My NFTs** | View all NFTs you currently own (fetches past mint events) |
+| **List for Sale** | Approve + list your NFT at a custom ETH price |
+| **Marketplace** | Browse all active listings and buy any NFT |
+| **Cancel Listing** | Remove your own NFT from the marketplace |
+| **Admin Panel** | Owner-only: view and withdraw collected marketplace fees |
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## Tech Stack
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+| Layer | Technology |
+|---|---|
+| Frontend | React (hooks: useState, useEffect, useCallback) |
+| Blockchain library | ethers.js v6 |
+| Wallet | MetaMask |
+| Smart Contract | Solidity ERC721 (deployed on Base Sepolia) |
+| NFT Storage | IPFS via Pinata (image + metadata) |
+| Network | Base Sepolia Testnet (Chain ID: 0x14a34 / 84532) |
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Project Structure
 
-### `npm run eject`
+```
+src/
+├── App.js          # All React logic — wallet, mint, list, buy, admin
+├── App.css         # Styling — tabs, cards, grid, responsive
+└── contract.js     # CONTRACT_ADDRESS, CONTRACT_ABI, CONTRACT_DEPLOY_BLOCK
+.env                # Pinata API credentials (never committed)
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Getting Started
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### 1. Clone the repo
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+git clone https://github.com/developernarendra/nft-marketplace.git
+cd nft-marketplace
+```
 
-## Learn More
+### 2. Install dependencies
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+npm install
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### 3. Set up environment variables
 
-### Code Splitting
+Create a `.env` file in the root folder:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```env
+REACT_APP_PINATA_JWT=your_pinata_jwt_token
+# OR use API key pair:
+REACT_APP_PINATA_API_KEY=your_pinata_api_key
+REACT_APP_PINATA_SECRET_API_KEY=your_pinata_secret
+```
 
-### Analyzing the Bundle Size
+Get your Pinata credentials at [pinata.cloud](https://pinata.cloud).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### 4. Set your contract deployment block (important)
 
-### Making a Progressive Web App
+In `src/contract.js`, set `CONTRACT_DEPLOY_BLOCK` to the block number when your contract was deployed.
+Find it on [Base Sepolia explorer](https://sepolia.basescan.org).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```js
+export const CONTRACT_DEPLOY_BLOCK = 38940000; // replace with your actual block
+```
 
-### Advanced Configuration
+This prevents HTTP 413 errors when fetching NFT events.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### 5. Run locally
 
-### Deployment
+```bash
+npm start
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Open http://localhost:3000 in your browser.
 
-### `npm run build` fails to minify
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Smart Contract
+
+- **Network:** Base Sepolia Testnet
+- **Contract Address:** `0x715970c3F05B9B85364aBC3E9aeAa025a088d8ae`
+- **Standard:** ERC721 + Ownable
+- **Deployed with:** Remix IDE
+- **Verified on:** [BaseScan](https://sepolia.basescan.org/address/0x715970c3F05B9B85364aBC3E9aeAa025a088d8ae)
+
+### Contract Functions
+
+| Function | Type | Description |
+|---|---|---|
+| `safeMint(uri)` | write | Mint a new NFT with metadata URI |
+| `listNFT(tokenId, price)` | write | List NFT for sale (requires approve first) |
+| `buyNFT(tokenId)` | payable | Buy a listed NFT, sends ETH to seller |
+| `cancelListing(tokenId)` | write | Remove NFT from sale |
+| `getAllListings()` | read | Returns all active listings |
+| `collectedFees()` | read | Total marketplace fees collected |
+| `withdrawFees()` | write (owner only) | Withdraw fees to owner wallet |
+
+---
+
+## How It Works — Mint Flow
+
+```
+1. User fills form (name, description, image)
+        ↓
+2. Image uploaded to IPFS via Pinata → returns Image CID
+        ↓
+3. Metadata JSON { name, description, image: IPFS URL }
+   → uploaded to IPFS → returns Metadata CID
+        ↓
+4. contract.safeMint(metadataURL) called
+   → MetaMask popup for approval
+   → Transaction confirmed on Base Sepolia (~2 sec)
+        ↓
+5. NFT minted — tokenId assigned, ownership recorded on-chain
+```
+
+---
+
+## Bugs Fixed During Development
+
+| # | Bug | Fix |
+|---|---|---|
+| 1 | getSigner() missing await (ethers v6) | Added await provider.getSigner() |
+| 2 | Mint never called the contract | Added contract.safeMint(url) + tx.wait() |
+| 3 | Wrong CONTRACT_ADDRESS (wallet address used) | Deployed on Remix, used actual contract address |
+| 4 | HTTP 413 — block range too large for RPC | Chunked queryFilter into 2000-block batches |
+| 5 | Wrong Network banner on Base Sepolia | Changed chain ID from 0xaa36a7 to 0x14a34 |
+
+---
+
+## Environment Variables for Vercel Deployment
+
+When deploying to Vercel, add these in **Project Settings → Environment Variables**:
+
+```
+REACT_APP_PINATA_JWT            = your_jwt
+REACT_APP_PINATA_API_KEY        = your_key
+REACT_APP_PINATA_SECRET_API_KEY = your_secret
+```
+
+---
+
+## License
+
+MIT — free to use and modify.
+
+---
+
+Built with React + ethers.js + Solidity on Base Sepolia.
