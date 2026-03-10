@@ -6,7 +6,7 @@ A full-stack NFT marketplace built with React, ethers.js, and a custom ERC721 So
 
 ## Live Demo
 
-> Deployed on Vercel — link added after deployment
+> 🔗 **[https://nft-marketplace-developernarendra.vercel.app](https://nft-marketplace-developernarendra.vercel.app)**
 
 ---
 
